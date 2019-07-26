@@ -35,7 +35,7 @@ Connection: keep-alive
 cache-control: no-cache
 
 {
-	"title":"a test",
-	"creator":"Nill"
+    "title":"a test",
+    "creator":"Nill"
 }
 ```
