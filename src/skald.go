@@ -1,7 +1,10 @@
 package main
 
 import (
+	"context"
 	"fmt"
+
+	"cloud.google.com/go/firestore"
 
 	"github.com/gin-gonic/gin"
 )
@@ -12,21 +15,32 @@ type BookMetaData struct {
 }
 
 func main() {
-	fmt.Printf("hello, world\n")
-
 	route := gin.Default()
 	route.PUT("/book", createBook)
 	route.Run()
 }
 
 func createBook(c *gin.Context) {
-	// var book BookMetaData
+
+	//create a firestore client
+	ctx := context.Background()
+	client, err := firestore.NewClient(ctx, "adaptivestoryengine")
+	if err != nil {
+		c.AbortWithError(400, err)
+		fmt.Printf("something happened on firestore.NewClient")
+		fmt.Println(err)
+		return
+	}
+	test := client.Doc("books/test")
+	fmt.Println(test)
 
 	data := new(BookMetaData)
 
-	err := c.BindJSON(data)
-	if err != nil {
-		c.AbortWithError(400, err)
+	errJ := c.BindJSON(data)
+	if errJ != nil {
+		fmt.Printf("something happened on c.BindJSON \n")
+		fmt.Println(errJ)
+		c.AbortWithError(400, errJ)
 		return
 	}
 
